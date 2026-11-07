@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cloudcart-db
+    environment:
+      POSTGRES_DB: cloudcart
+      POSTGRES_USER: ${DATABASE_USER:-cloudcart}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-cloudcart}
+    ports: ["5432:5432"]
+    volumes: ["cloudcart_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d cloudcart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  cloudcart_data:
